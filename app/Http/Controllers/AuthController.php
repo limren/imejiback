@@ -11,15 +11,18 @@ class AuthController extends Controller
 {
     public function register(Request $request)
     {
+        echo $request;
         $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
+            'pseudo' => 'required|string|max:255',
+            'firstname' => 'required|string|max:255',
+            'surname' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8',
         ]);
-        $name = $validatedData['name'];
-        $email = $validatedData['email'];
         $user = User::create([
-            'name' => $validatedData['name'],
+            'pseudo' => $validatedData['pseudo'],
+            'firstname' => $validatedData['firstname'],
+            'surname' => $validatedData['surname'],
             'email' => $validatedData['email'],
             'password' => Hash::make($validatedData['password']),
         ]);
@@ -28,7 +31,10 @@ class AuthController extends Controller
 
         return response()->json([
             'token' => $token,
-            'email' => $email,
+            'email' => $validatedData['email'],
+            'pseudo' => $validatedData['pseudo'],
+            'firstname' => $validatedData['firstname'],
+            'surname' => $validatedData['surname'],
         ]);
     }
 
@@ -41,12 +47,22 @@ class AuthController extends Controller
         }
 
         $user = User::where('email', $request['email'])->firstOrFail();
-
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
             'token' => $token,
-            'email' => $request['email']
+            'email' => $request['email'],
+            'pseudo' => $user['pseudo'],
+            'firstname' => $user['firstname'],
+            'surname' => $user['surname'],
         ]);
+    }
+    public function logout()
+    {
+        Auth::user()->tokens->each(function ($token, $key) {
+            $token->delete();
+        });
+
+        return response()->json('Logged out successfully');
     }
 }
