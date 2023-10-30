@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CSRFTokenController;
+use App\Http\Controllers\ImageController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -24,11 +25,18 @@ Route::controller(AuthController::class)->group(function () {
     Route::post("/login", "login");
 });
 
+
+
+
 Route::get('/csrf-token', [CSRFTokenController::class, 'getToken']);
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('/user', [UserController::class, 'index']);
     Route::post('/logout', [AuthController::class, "logout"]);
+    Route::controller(ImageController::class)->group(function () {
+        Route::get("/getImages", "getImages");
+        Route::post("/createImage", "createImage");
+    });
 });
 
 Route::get("/", function () {

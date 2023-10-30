@@ -17,4 +17,11 @@ class Image extends Model
         "categoriesId",
         "translatedText"
     ];
+
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'images';
 }

@@ -17,11 +17,11 @@ class CreateImagesTable extends Migration
             $table->id();
             $table->timestamps();
             $table->string("userId");
-            $table->json("categoriesId");
+            $table->json("categoriesId")->nullable();
             $table->string("path");
             $table->string("title");
-            $table->string("description");
-            $table->string("translatedText");
+            $table->text("description")->nullable();
+            $table->text("translatedText")->nullable();
         });
     }
 
