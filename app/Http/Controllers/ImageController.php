@@ -15,7 +15,7 @@ class ImageController extends Controller
         $validatedData = $request->validate([
             "image" => 'required|image|mimes:jpeg,png,jpg',
             "title" => 'required|string|max:255',
-            "description" => "nullable",
+            "description" => "nullable|string",
             "categoriesId" => "nullable"
         ]);
 
@@ -32,7 +32,12 @@ class ImageController extends Controller
                 'description' => $validatedData['description'],
             ]);
 
-            return response()->json(['message' => 'Image uploaded successfully'], 201);
+            return response()->json([
+                'path' => $imageUrl,
+                'title' => $validatedData['title'],
+                'description' => $validatedData['description'],
+                'categoriesId' => json_decode($request->input('categoriesId'))
+            ], 201);
         }
 
         return response()->json([
