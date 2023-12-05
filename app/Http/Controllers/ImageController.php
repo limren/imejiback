@@ -21,9 +21,9 @@ class ImageController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('images');
+            $imagePath = $request->file('image')->store('public/images');
             $imageUrl = Storage::url($imagePath);
-            Image::create([
+            $imageCreated = Image::create([
                 // No need to get the user Id from the request since he should be logged in to make the request
                 'userId' => Auth::id(),
                 'categoriesId' => json_decode($request->input('categoriesId')),
@@ -34,6 +34,7 @@ class ImageController extends Controller
             ]);
 
             return response()->json([
+                "id" => $imageCreated->id,
                 'path' => $imageUrl,
                 'title' => $validatedData['title'],
                 'description' => $validatedData['description'],
@@ -47,8 +48,48 @@ class ImageController extends Controller
         ]);
     }
 
-    public function getImages(Request $request)
+    public function getImages($page)
     {
-        return Image::where("userId", "=", Auth::id())->get();
+        $perPage = 20;
+
+        if ($page < 0) {
+            $page = 0; // Ensure page is not negative
+        }
+
+        $offset = ($page - 1) * $perPage;
+
+        return response()->json([
+            'images' => Image::where("userId", "=", Auth::id())->skip($offset)->take($perPage)->get(),
+            'total' => Image::where("userId", "=", Auth::id())->count()
+        ]);
+    }
+    public function getImage($id)
+    {
+        $image = Image::where("id", "=", $id)->first();
+        if ($image->userId == Auth::id()) {
+            return response()->json([
+                'image' => $image
+            ]);
+        }
+        return response()->json([
+            'message' => 'Image not found'
+        ]);
+    }
+    public function deleteImage(Request $request)
+    {
+        $validatedData = $request->validate([
+            "id" => 'required|integer'
+        ]);
+
+        $image = Image::where("id", "=", $validatedData['id'])->first();
+        if ($image->userId == Auth::id()) {
+            $image->delete();
+            return response()->json([
+                'message' => 'Image deleted successfully'
+            ]);
+        }
+        return response()->json([
+            'message' => 'Image not found'
+        ]);
     }
 }

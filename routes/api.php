@@ -26,19 +26,16 @@ Route::controller(AuthController::class)->group(function () {
 });
 
 
-
-
 Route::get('/csrf-token', [CSRFTokenController::class, 'getToken']);
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('/user', [UserController::class, 'index']);
     Route::post('/logout', [AuthController::class, "logout"]);
     Route::controller(ImageController::class)->group(function () {
-        Route::get("/getImages", "getImages");
+        Route::get("/getPages", "getPages");
+        Route::get("/getImages/{page}", "getImages");
+        Route::get("/getImage/{id}", "getImage");
         Route::post("/createImage", "createImage");
+        Route::delete("/deleteImage", "deleteImage");
     });
-});
-
-Route::get("/", function () {
-    return 'hello world';
 });
