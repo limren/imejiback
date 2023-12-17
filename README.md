@@ -1,63 +1,55 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+# Imeji
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Bonjour/Bonsoir Monsieur,
 
-## About Laravel
+Bienvenue sur mon site Imeji - site que j'ai effectué de A à Z avec React (TS)/Laravel pour ce semestre.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Le site
+Permet de retranscrire le contenu d'une image par l'OCR (Reconnaissance optique de caractères) via l'API fournie gratuitement par [OCRSpace](https://ocr.space/OCRAPI) et permet également de les stockers et d'effectuer une pagination simple dessus. La clé de l'API est disponible dans le .env. (Vous pouvez utiliser la mienne, ce n'est pas un problème !)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+J'ai laissé la config par défaut de React avec webpack, désolé pour cet affront ! (Vive Vite)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Le contenu est envoyé/retrouvé côté serveur grâce à Laravel et l'API que j'ai setup avec.
 
-## Learning Laravel
+De plus, j'ai implémenté un système d'authentification, ce qui permet de créer son propre compte et d'avoir ses propres images.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Si vous ne voulez pas vous créer de compte, vous pouvez by-pass la vérification en mettant un auth-token dans le local storage vide/avec du contenu au hasard. 
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Tout le stockage des données est sur une BdD MySQL dont le dump est normalement trouvable dans le [GitLab](https://gitlab.unistra.fr/imeji/imejiback) du projet côté serveur - la gestion des données côtés serveur est effectué via l'intermédiaire Eloquent, qui est l'ORM fournie par défaut avec Laravel.
 
-## Laravel Sponsors
+Le design a été fait main (ça se voit, désolé ce n'est pas mon fort ahah) et toutes les icônes sont libres et trouvables sur [iconmonstr](https://iconmonstr.com/) et/ou les icônes gratuites offertes avec le GH Student Pack sur [icons8](https://icones8.fr/).
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+Tout le contenu est normalement traduisible en Anglais/Français, il suffit de mettre son navigateur en Anglais et tout est géré ( les textes traduits sont dans [src/utils/Text.ts]()).
+Il se peut cependant que le cache fasse un peu n'importe quoi niveau API OCRSpace qui permet de choisir n'importe quelle langue, désolé si cela arrive.
 
-### Premium Partners
+## Lancement
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+## Côté Front
 
-## Contributing
+### `npm start`
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Lance l'application côté front sur le port 3000 :
+[http://localhost:3000](http://localhost:3000).
 
-## Code of Conduct
+ Il est préférable de configurer le front sur le port 3000 à cause de problème de CORS sur la config du serv php.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
 
-## Security Vulnerabilities
+## Côté Back
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### php artian serve --port=8000
+
+Lance l'application côté serveur sur le port 8000 :
+[http://localhost:8000](http://localhost:8000).
+
+La BdD est par défaut lancée sur le port 3306 - comme indiqué dans le .env, n'hésitez pas à changer.
+
+
+
+## Finalement,
+
+Si vous avez un quelconque problème de lancement ou des questions, n'hésitez pas à me contacter sur mon Discord limren ou via mon adresse mail axel.boyer2@etu.unistra.fr.
+
+Merci à vous.
 
 ## License
 
