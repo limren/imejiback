@@ -17,7 +17,6 @@ class CreateImagesTable extends Migration
             $table->id();
             $table->timestamps();
             $table->string("userId");
-            $table->json("categoriesId")->nullable();
             $table->string("path");
             $table->string("title");
             $table->text("description")->nullable();

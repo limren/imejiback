@@ -14,7 +14,6 @@ class Image extends Model
         "description",
         "title",
         "userId",
-        "categoriesId",
         "translatedText"
     ];
 

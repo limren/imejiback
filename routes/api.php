@@ -36,6 +36,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
         Route::get("/getImages/{page}", "getImages");
         Route::get("/getImage/{id}", "getImage");
         Route::post("/createImage", "createImage");
-        Route::delete("/deleteImage", "deleteImage");
+        Route::delete("/deleteImage/{id}", "deleteImage");
+        Route::put("/putImage", "putImage");
     });
 });

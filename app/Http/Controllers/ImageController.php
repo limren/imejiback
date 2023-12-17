@@ -17,7 +17,6 @@ class ImageController extends Controller
             "title" => 'required|string|max:255',
             "translatedText" => 'nullable',
             "description" => "nullable",
-            "categoriesId" => "nullable"
         ]);
 
         if ($request->hasFile('image')) {
@@ -26,7 +25,6 @@ class ImageController extends Controller
             $imageCreated = Image::create([
                 // No need to get the user Id from the request since he should be logged in to make the request
                 'userId' => Auth::id(),
-                'categoriesId' => json_decode($request->input('categoriesId')),
                 'path' => $imageUrl,
                 'title' => $validatedData['title'],
                 'description' => $validatedData['description'],
@@ -39,7 +37,6 @@ class ImageController extends Controller
                 'title' => $validatedData['title'],
                 'description' => $validatedData['description'],
                 'translatedText' => $validatedData['translatedText'],
-                'categoriesId' => json_decode($request->input('categoriesId'))
             ], 201);
         }
 
@@ -50,7 +47,7 @@ class ImageController extends Controller
 
     public function getImages($page)
     {
-        $perPage = 20;
+        $perPage = 10;
 
         if ($page < 0) {
             $page = 0; // Ensure page is not negative
@@ -61,7 +58,7 @@ class ImageController extends Controller
         return response()->json([
             'images' => Image::where("userId", "=", Auth::id())->skip($offset)->take($perPage)->get(),
             'total' => Image::where("userId", "=", Auth::id())->count()
-        ]);
+        ], 200);
     }
     public function getImage($id)
     {
@@ -75,21 +72,40 @@ class ImageController extends Controller
             'message' => 'Image not found'
         ]);
     }
-    public function deleteImage(Request $request)
+    public function deleteImage($id)
+    {
+        $image = Image::where("id", "=", $id)->first();
+        if ($image->userId == Auth::id()) {
+            $image->delete();
+            return response()->json([
+                'message' => 'Image deleted successfully',
+                'success' => true
+            ], 200);
+        }
+        return response()->json([
+            'message' => 'Image not found',
+            'success' => false
+        ]);
+    }
+    public function putImage(Request $request)
     {
         $validatedData = $request->validate([
-            "id" => 'required|integer'
+            "id" => "required",
+            "title" => 'required|string|max:255',
+            "translatedText" => 'nullable',
+            "description" => "nullable",
         ]);
 
         $image = Image::where("id", "=", $validatedData['id'])->first();
         if ($image->userId == Auth::id()) {
-            $image->delete();
+            $image->title = $validatedData['title'];
+            $image->translatedText = $validatedData['translatedText'];
+            $image->description = $validatedData['description'];
+            $image->save();
             return response()->json([
-                'message' => 'Image deleted successfully'
-            ]);
+                'message' => 'Image updated successfully',
+                'success' => true
+            ], 201);
         }
-        return response()->json([
-            'message' => 'Image not found'
-        ]);
     }
 }
